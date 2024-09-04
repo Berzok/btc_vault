@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Base;
 
 use Doctrine\Persistence\ManagerRegistry;
-use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,31 +56,5 @@ class ApiController extends BaseController {
         $em->remove($data);
         $em->flush();
         return new JsonResponse('ok');
-    }
-
-    /**
-     * @param int $id
-     * @return BinaryFileResponse
-     */
-    public function image(int $id): BinaryFileResponse {
-        // Generate response
-        $response = new Response();
-        $file = 'path/to/file.txt';
-        $response = new BinaryFileResponse($file);
-
-        // you can modify headers here, before returning
-        return $response;
-
-        // Set headers
-        $response->headers->set('Cache-Control', 'private');
-        $response->headers->set('Content-type', mime_content_type($filename));
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($filename) . '";');
-        $response->headers->set('Content-length', filesize($filename));
-
-        // Send headers before outputting anything
-        $response->sendHeaders();
-        $response->setContent(file_get_contents($filename));
-
-        return $response;
     }
 }

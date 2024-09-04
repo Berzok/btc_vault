@@ -3,17 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\DrinkRepository;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
-use Vich\UploaderBundle\Entity\File;
-use Vich\UploaderBundle\Entity\File as EmbeddedFile;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: DrinkRepository::class)]
-#[Vich\Uploadable]
 class Drink {
 
     #[ORM\Id]

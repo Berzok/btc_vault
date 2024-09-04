@@ -6,6 +6,7 @@ use App\Controller\Base\ApiController;
 use App\Entity\Drink;
 use App\Form\DrinkType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

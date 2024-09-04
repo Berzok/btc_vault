@@ -20,7 +20,7 @@ class DrinkController extends ApiController {
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'new', methods: ['POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response {
         $drink = new Drink();
         $form = $this->createForm(DrinkType::class, $drink);

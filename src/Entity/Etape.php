@@ -5,9 +5,10 @@ namespace App\Entity;
 use App\Repository\EtapeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: EtapeRepository::class)]
-#[ORM\UniqueConstraint(name: 'etape_unique', columns: ['drink_id', 'step'])]
+#[ORM\UniqueConstraint(name: 'etape_unique', columns: ['drink_id', 'content'])]
 class Etape {
 
     #[ORM\Id]
@@ -20,6 +21,7 @@ class Etape {
 
     #[ORM\ManyToOne(inversedBy: 'etapes')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Ignore]
     private ?Drink $drink = null;
 
     #[ORM\Column(type: Types::SMALLINT)]

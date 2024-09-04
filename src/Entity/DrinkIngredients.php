@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\DrinkIngredientsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: DrinkIngredientsRepository::class)]
 class DrinkIngredients {
@@ -14,9 +16,11 @@ class DrinkIngredients {
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'drinkIngredients')]
+    #[Ignore]
     private ?Drink $drink = null;
 
     #[ORM\ManyToOne(inversedBy: 'drinkIngredients')]
+    #[MaxDepth(1)]
     private ?Ingredient $ingredient = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -42,7 +46,6 @@ class DrinkIngredients {
      */
     public function setDrink(?Drink $drink): static {
         $this->drink = $drink;
-
         return $this;
     }
 
@@ -59,7 +62,6 @@ class DrinkIngredients {
      */
     public function setIngredient(?Ingredient $ingredient): static {
         $this->ingredient = $ingredient;
-
         return $this;
     }
 
@@ -76,7 +78,6 @@ class DrinkIngredients {
      */
     public function setQuantity(?string $quantity): static {
         $this->quantity = $quantity;
-
         return $this;
     }
 

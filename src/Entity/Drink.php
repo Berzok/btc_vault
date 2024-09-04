@@ -7,10 +7,10 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Vich\UploaderBundle\Entity\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Vich\UploaderBundle\Entity\File as EmbeddedFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: DrinkRepository::class)]
 #[Vich\Uploadable]
@@ -31,6 +31,7 @@ class Drink {
      * @var Collection<int, DrinkIngredients>
      */
     #[ORM\OneToMany(targetEntity: DrinkIngredients::class, mappedBy: 'drink')]
+    #[MaxDepth(2)]
     private Collection $drinkIngredients;
 
     /**
@@ -42,16 +43,8 @@ class Drink {
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $icon = null;
 
-    // NOTE: This is not a mapped field of entity metadata, just a simple property.
-    #[Vich\UploadableField(mapping: 'drinks', fileNameProperty: 'imageName', size: 'imageSize')]
     #[ORM\Column(length: 255, nullable: true)]
-    private ?File $imageFile = null;
-
-    #[ORM\Embedded(class: 'Vich\UploaderBundle\Entity\File')]
-    private ?EmbeddedFile $image = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?DateTimeImmutable $updatedAt = null;
+    private ?string $image = null;
 
     public function __construct() {
         $this->drinkIngredients = new ArrayCollection();
@@ -142,43 +135,34 @@ class Drink {
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getIcon(): ?string {
         return $this->icon;
     }
 
+    /**
+     * @param string|null $icon
+     * @return $this
+     */
     public function setIcon(?string $icon): static {
         $this->icon = $icon;
         return $this;
     }
 
     /**
-     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
-     * of 'UploadedFile' is injected into this setter to trigger the update. If this
-     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
-     * must be able to accept an instance of 'File' as the bundle will inject one here
-     * during Doctrine hydration.
-     *
-     * @param EmbeddedFile|null $imageFile
+     * @param string|null $image
+     * @return void
      */
-    public function setImageFile(?EmbeddedFile $imageFile = null): void {
-        $this->imageFile = $imageFile;
-
-        if (null !== $imageFile) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
-            $this->updatedAt = new DateTimeImmutable();
-        }
-    }
-
-    public function getImageFile(): ?File {
-        return $this->imageFile;
-    }
-
-    public function setImage(EmbeddedFile $image): void {
+    public function setImage(?string $image): void {
         $this->image = $image;
     }
 
-    public function getImage(): ?EmbeddedFile {
+    /**
+     * @return string|null
+     */
+    public function getImage(): ?string {
         return $this->image;
     }
 }

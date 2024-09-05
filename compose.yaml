@@ -30,7 +30,7 @@ services:
       - symfony
 
   ###> doctrine/doctrine-bundle ###
-  database:
+  db:
     image: mariadb:latest # Utilise l'image MariaDB appropriée
     container_name: btc_vault_db
     environment:
@@ -48,9 +48,11 @@ services:
       - database_data:/var/lib/mysql:rw # Volume pour les données MariaDB
     ports:
       - "3306:3306" # Expose le port 3306 pour accéder à MariaDB
+    networks:
+      - symfony
   ###< doctrine/doctrine-bundle ###
 
 volumes:
   ###> doctrine/doctrine-bundle ###
-  database_data:
+  db_data:
   ###< doctrine/doctrine-bundle ###

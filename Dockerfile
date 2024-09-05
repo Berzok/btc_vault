@@ -34,7 +34,7 @@ RUN composer self-update
 RUN composer clear-cache
 
 # Installation des dépendances de l'application
-RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-interaction --ignore-platform-reqs
+RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-interaction --ignore-platform-reqs --verbose
 
 # Génération du cache pour le mode de production
 RUN php bin/console cache:warmup

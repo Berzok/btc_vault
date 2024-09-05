@@ -1,6 +1,6 @@
 {
     "doctrine/doctrine-bundle": {
-        "version": "2.12",
+        "version": "2.13",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -91,7 +91,7 @@
         ]
     },
     "symfony/maker-bundle": {
-        "version": "1.60",
+        "version": "1.61",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",

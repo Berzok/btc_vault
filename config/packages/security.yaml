@@ -15,7 +15,6 @@ security:
       security: false
     main:
       lazy: true
-      provider: users_in_memory
       json_login:
         # api_login is a route we will create below
         check_path: api_login

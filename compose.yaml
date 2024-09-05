@@ -1,7 +1,38 @@
+version: '3.8'
+
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: symfony_app
+    working_dir: /var/www/symfony
+    volumes:
+      - ./:/var/www/symfony
+    environment:
+      APP_ENV: prod
+    depends_on:
+      - db
+    networks:
+      - symfony
+
+  web:
+    image: nginx:alpine
+    container_name: symfony_web
+    volumes:
+      - ./:/var/www/symfony
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+    networks:
+      - symfony
+
   ###> doctrine/doctrine-bundle ###
   database:
-    image: mariadb:10.7 # Utilise l'image MariaDB appropriée
+    image: mariadb:latest # Utilise l'image MariaDB appropriée
+    container_name: btc_vault_db
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE:-btc_vault}
       # Vous devriez changer le mot de passe en production
@@ -9,7 +40,7 @@ services:
       MYSQL_USER: ${MYSQL_USER:-app}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 5s
       retries: 5
       start_period: 60s

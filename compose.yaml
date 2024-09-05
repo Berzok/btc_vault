@@ -41,6 +41,7 @@ services:
       retries: 5
       start_period: 60s
     volumes:
+      - ./docker/build/db/:/docker-entrypoint-initdb.d/
       - database_data:/var/lib/mysql:rw
     ports:
       - "3306:3306"

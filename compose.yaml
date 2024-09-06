@@ -6,9 +6,10 @@ services:
     container_name: symfony_app
     working_dir: /var/www/symfony
     volumes:
-      - ./:/var/www/symfony
+      - symfony_app_var:/var/www/symfony/var
+      - symfony_app_vendor:/var/www/symfony/vendor
     environment:
-      APP_ENV: prod
+      APP_ENV: dev
     depends_on:
       - db
     networks:
@@ -19,9 +20,9 @@ services:
     container_name: symfony_web
     volumes:
       - ./:/var/www/symfony
-      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./docker/nginx/sites-available:/etc/nginx/sites-available
     ports:
-      - "80:80"
+      - "10324:80"
     depends_on:
       - app
     networks:
@@ -31,10 +32,10 @@ services:
     image: mariadb:latest
     container_name: btc_vault_db
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-btc_vault}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-!ChangeMe!}
-      MYSQL_USER: ${MYSQL_USER:-app}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 5s
@@ -44,12 +45,15 @@ services:
       - ./docker/build/db/:/docker-entrypoint-initdb.d/
       - database_data:/var/lib/mysql:rw
     ports:
-      - "3306:3306"
+      - "3310:3306"
     networks:
       - symfony
 
 volumes:
+  symfony_app_var:
+  symfony_app_vendor:
   database_data:
 
 networks:
   symfony:
+    driver: bridge

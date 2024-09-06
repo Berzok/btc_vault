@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     locales \
+    net-tools \
     && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
 
 # Installe Composer
@@ -34,7 +35,7 @@ RUN composer self-update
 RUN composer clear-cache
 
 # Installation des dépendances de l'application
-RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-interaction --ignore-platform-reqs --verbose
+RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-interaction --ignore-platform-reqs
 
 # Génération du cache pour le mode de production
 RUN php bin/console cache:warmup
@@ -44,6 +45,8 @@ RUN chown -R www-data:www-data /var/www/symfony
 
 # Expose le port 9000 pour PHP-FPM
 EXPOSE 9000
+
+USER www-data
 
 # Démarre PHP-FPM
 CMD ["php-fpm"]

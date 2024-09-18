@@ -12,7 +12,6 @@
 namespace App\Form;
 
 use App\Entity\DrinkIngredients;
-use App\Entity\TodoItem;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -23,7 +22,9 @@ class DrinkIngredientType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
-            ->add('quantity', NumberType::class, [
+            ->add('id', NumberType::class)
+            ->add('ingredient', IngredientType::class)
+            ->add('quantity', TextType::class, [
                 // added because setDescription() doesn't allow null
                 // it would be simpler to make the arg to that method nullable
                 'empty_data' => '',
@@ -32,6 +33,8 @@ class DrinkIngredientType extends AbstractType {
     }
 
     public function configureOptions(OptionsResolver $resolver): void {
-        $resolver->setDefaults(['data_class' => DrinkIngredients::class]);
+        $resolver->setDefaults([
+            'data_class' => DrinkIngredients::class
+        ]);
     }
 }

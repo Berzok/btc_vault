@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Base;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,7 +47,7 @@ class ApiController extends BaseController {
      * @param int $id
      * @return Response
      */
-    #[Route('/delete/{id}', name: 'delete', methods: 'DELETE')]
+    #[Route('/{id}', name: 'delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
     public function delete(int $id): Response {
         $em = $this->doctrine->getManager();
         $data = $em->find($this->entity, $id);

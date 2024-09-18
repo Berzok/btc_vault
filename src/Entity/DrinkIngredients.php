@@ -19,7 +19,7 @@ class DrinkIngredients {
     #[Ignore]
     private ?Drink $drink = null;
 
-    #[ORM\ManyToOne(inversedBy: 'drinkIngredients')]
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'drinkIngredients')]
     #[MaxDepth(1)]
     private ?Ingredient $ingredient = null;
 
@@ -31,6 +31,11 @@ class DrinkIngredients {
 
     public function getId(): ?int {
         return $this->id;
+    }
+
+    public function setId(int $id): static {
+        $this->id = $id;
+        return $this;
     }
 
     /**

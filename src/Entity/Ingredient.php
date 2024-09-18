@@ -37,6 +37,11 @@ class Ingredient {
         return $this->id;
     }
 
+    public function setId(int $id): static {
+        $this->id = $id;
+        return $this;
+    }
+
     public function getName(): ?string {
         return $this->name;
     }

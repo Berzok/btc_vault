@@ -3,37 +3,63 @@
 namespace App\Form;
 
 use App\Entity\Drink;
-use App\Entity\Ingredient;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
 
 class DrinkType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
-            ->add('name')
-            ->add('alcool')
-            ->add('ingredients', EntityType::class, [
-                'class' => Ingredient::class,
-                'choice_label' => 'id',
-                'multiple' => true,
+            ->add('id', NumberType::class)
+            ->add('name', TextType::class, [
+                'label' => 'Nom de la boisson',
+                'required' => true,
             ])
-            ->add('drinkIngredients', LiveCollectionType::class, [
+            ->add('description', TextType::class, [
+                'label' => 'Description',
+                'required' => true,
+            ])
+            ->add('icon', TextType::class, [
+                'label' => 'Icône',
+                'required' => false,
+                'mapped' => false
+            ])
+            ->add('image', FileType::class, [
+                'label' => 'Image',
+                'required' => false,
+                'mapped' => false
+            ])
+            ->add('drinkIngredients', CollectionType::class, [
                 'entry_type' => DrinkIngredientType::class,
-                'entry_options' => ['label' => false],
-                'label' => false,
+                'label' => 'Ingrédients',
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
+                'required' => true,
+            ])
+            ->add('etapes', CollectionType::class, [
+                'entry_type' => EtapeType::class,
+                'label' => 'Étapes',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'required' => false,
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void {
         $resolver->setDefaults([
             'data_class' => Drink::class,
+            'csrf_protection' => false,
+            'allow_extra_fields' => true,
+            'attr' => [
+                'enctype' => 'multipart/form-data', // Assure-toi que l'encodage est défini
+            ],
         ]);
     }
 }

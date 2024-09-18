@@ -34,6 +34,11 @@ class Etape {
         return $this->id;
     }
 
+    public function setId(int $id): static {
+        $this->id = $id;
+        return $this;
+    }
+
     /**
      * @return string|null
      */

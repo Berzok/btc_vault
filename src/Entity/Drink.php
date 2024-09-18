@@ -25,14 +25,14 @@ class Drink {
     /**
      * @var Collection<int, DrinkIngredients>
      */
-    #[ORM\OneToMany(targetEntity: DrinkIngredients::class, mappedBy: 'drink')]
+    #[ORM\OneToMany(targetEntity: DrinkIngredients::class, mappedBy: 'drink', cascade: ['persist'])]
     #[MaxDepth(2)]
     private Collection $drinkIngredients;
 
     /**
      * @var Collection<int, Etape>
      */
-    #[ORM\OneToMany(targetEntity: Etape::class, mappedBy: 'drink', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Etape::class, mappedBy: 'drink', cascade: ['persist'], orphanRemoval: true)]
     private Collection $etapes;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -48,6 +48,11 @@ class Drink {
 
     public function getId(): ?int {
         return $this->id;
+    }
+
+    public function setId(int $id): static {
+        $this->id = $id;
+        return $this;
     }
 
     public function getName(): ?string {

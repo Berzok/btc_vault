@@ -8,6 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Serializer;
 
 /**
@@ -48,6 +49,7 @@ class ApiController extends BaseController {
      * @return Response
      */
     #[Route('/{id}', name: 'delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
+    #[IsGranted('ROLE_ADMIN', message: 'Denied.')]
     public function delete(int $id): Response {
         $em = $this->doctrine->getManager();
         $data = $em->find($this->entity, $id);

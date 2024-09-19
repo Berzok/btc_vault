@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_NAME', fields: ['name'])]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     #[ORM\Id]
@@ -17,7 +17,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    private ?string $name = null;
+    private ?string $username = null;
 
     /**
      * @var list<string> The user roles
@@ -31,27 +31,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\Column]
     private ?string $password = null;
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int {
         return $this->id;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getName(): ?string {
-        return $this->name;
+    public function getUsername(): ?string {
+        return $this->username;
     }
 
-    /**
-     * @param string $name
-     * @return $this
-     */
-    public function setName(string $name): static {
-        $this->name = $name;
-
+    public function setUsername(string $username): static {
+        $this->username = $username;
         return $this;
     }
 
@@ -61,7 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
      * @see UserInterface
      */
     public function getUserIdentifier(): string {
-        return (string)$this->name;
+        return (string)$this->username;
     }
 
     /**
@@ -92,10 +81,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         return $this->password;
     }
 
-    /**
-     * @param string $password
-     * @return $this
-     */
     public function setPassword(string $password): static {
         $this->password = $password;
         return $this;

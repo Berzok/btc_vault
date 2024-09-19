@@ -9,6 +9,7 @@ use App\Service\FileHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/drink', name: 'drink_')]
 class DrinkController extends ApiController {
@@ -21,6 +22,7 @@ class DrinkController extends ApiController {
      * @return Response
      */
     #[Route('', name: 'new', methods: ['POST', 'PUT'])]
+    #[IsGranted('ROLE_ADMIN', message: 'Denied.')]
     public function new(Request $request, FileHandler $fileHandler): Response {
         $data = $request->request->all();
 
@@ -70,21 +72,9 @@ class DrinkController extends ApiController {
             ], Response::HTTP_CREATED);
         }
 
-        //$drink = $drinkService->decodeMultipartRequest($request);
-        //On assigne les différents champs de l'objet
-        //$drink = $drinkService->assignDataToDrink($data);
-
-        $message = $request->isMethod('POST') ? 'Drink created' : 'Drink updated';
-
         return $this->json([
             'status' => 'error',
             'message' => 'Erreur',
-            'data' => [
-                'id' => $drink->getId(),
-                'name' => $drink->getName(),
-                'description' => $drink->getDescription(),
-                // Ajouter d'autres propriétés ici si nécessaire
-            ]
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

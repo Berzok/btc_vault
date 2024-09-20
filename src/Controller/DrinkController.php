@@ -56,6 +56,14 @@ class DrinkController extends ApiController {
                 $drink->setImage($filename);
             }
 
+            $iconFile = $form->get('icon')->getData();
+            if ($iconFile) {
+                $filename = $fileHandler->upload($iconFile, 'images/icons');
+                $fileHandler->deleteIcon($drink->getIcon());
+                $drink->setIcon('icons/' . $filename);
+            }
+
+
             $manager = $this->doctrine->getManager();
             $manager->persist($drink);
             $manager->flush();

@@ -24,7 +24,7 @@ class DrinkType extends AbstractType {
                 'label' => 'Description',
                 'required' => true,
             ])
-            ->add('icon', TextType::class, [
+            ->add('icon', FileType::class, [
                 'label' => 'Icône',
                 'required' => false,
                 'mapped' => false

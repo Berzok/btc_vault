@@ -92,12 +92,11 @@ class DrinkController extends ApiController {
     }
 
     /**
-     * @param Request $request
      * @param int $id
      * @return BinaryFileResponse|JsonResponse
      */
     #[Route('/image/{id}', name: 'image', methods: ['GET'])]
-    public function image(Request $request, int $id): BinaryFileResponse|JsonResponse {
+    public function image(int $id): BinaryFileResponse|JsonResponse {
         // Récupérer l'objet Drink depuis la base de données
         $drink = $this->doctrine->getRepository($this->entity)->find($id);
 
@@ -107,7 +106,7 @@ class DrinkController extends ApiController {
         }
 
         // Récupérer la propriété 'image' qui contient le chemin relatif de l'image
-        $imagePath = $drink->getImage(); // Exemple : 'images/drinks/cocktail.jpg'
+        $imagePath = $drink->getImage();
 
         // Chemin absolu vers le fichier dans le dossier public
         $publicDirectory = $this->getParameter('kernel.project_dir') . '/public/uploads/images/';
@@ -130,12 +129,11 @@ class DrinkController extends ApiController {
     }
 
     /**
-     * @param Request $request
      * @param int $id
      * @return BinaryFileResponse|JsonResponse
      */
     #[Route('/icon/{id}', name: 'image', methods: ['GET'])]
-    public function icon(Request $request, int $id): BinaryFileResponse|JsonResponse {
+    public function icon(int $id): BinaryFileResponse|JsonResponse {
         // Récupérer l'objet Drink depuis la base de données
         $drink = $this->doctrine->getRepository($this->entity)->find($id);
 

@@ -9,15 +9,9 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 readonly class FileHandler {
 
-    private string $imagePath;
-    private string $iconPath;
-
     public function __construct(
         private string           $uploadPath,
-        private SluggerInterface $slugger,
-    ) {
-        $this->imagePath = $this->uploadPath . '/images';
-        $this->iconPath = $this->uploadPath . '/images/icons';
+        private SluggerInterface $slugger) {
     }
 
     /**
@@ -52,6 +46,10 @@ readonly class FileHandler {
         }
     }
 
+    /**
+     * @param string $filepath
+     * @return void
+     */
     public function deleteImage(string $filepath): void {
         $filesystem = new Filesystem();
         $realPath = $this->getImagePath() . '/' . $filepath;
@@ -65,10 +63,10 @@ readonly class FileHandler {
     }
 
     public function getImagePath(): string {
-        return $this->imagePath;
+        return $this->getUploadPath() . '/images';
     }
 
     public function getIconPath(): string {
-        return $this->iconPath;
+        return $this->getUploadPath() . '/images/icons';
     }
 }

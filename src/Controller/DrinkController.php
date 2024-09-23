@@ -6,8 +6,13 @@ use App\Controller\Base\ApiController;
 use App\Entity\Drink;
 use App\Form\DrinkType;
 use App\Service\FileHandler;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -84,5 +89,81 @@ class DrinkController extends ApiController {
             'status' => 'error',
             'message' => 'Erreur',
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return BinaryFileResponse|JsonResponse
+     */
+    #[Route('/image/{id}', name: 'image', methods: ['GET'])]
+    public function image(Request $request, int $id): BinaryFileResponse|JsonResponse {
+        // Récupérer l'objet Drink depuis la base de données
+        $drink = $this->doctrine->getRepository($this->entity)->find($id);
+
+        // Vérifier si le drink existe
+        if (!$drink) {
+            return $this->json(['error' => 'Drink not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Récupérer la propriété 'image' qui contient le chemin relatif de l'image
+        $imagePath = $drink->getImage(); // Exemple : 'images/drinks/cocktail.jpg'
+
+        // Chemin absolu vers le fichier dans le dossier public
+        $publicDirectory = $this->getParameter('kernel.project_dir') . '/public/uploads/images/';
+        $filePath = $publicDirectory . $imagePath;
+
+        // Vérifier si le fichier existe
+        if (!file_exists($filePath)) {
+            return $this->json(['error' => 'Image not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Renvoyer le fichier en réponse
+        try {
+            $file = new File($filePath);
+            return $this->file($file, null, ResponseHeaderBag::DISPOSITION_INLINE);
+        } catch (FileNotFoundException $e) {
+            return $this->json([
+                'error' => 'File not found'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return BinaryFileResponse|JsonResponse
+     */
+    #[Route('/icon/{id}', name: 'image', methods: ['GET'])]
+    public function icon(Request $request, int $id): BinaryFileResponse|JsonResponse {
+        // Récupérer l'objet Drink depuis la base de données
+        $drink = $this->doctrine->getRepository($this->entity)->find($id);
+
+        // Vérifier si le drink existe
+        if (!$drink) {
+            return $this->json(['error' => 'Drink not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Récupérer la propriété 'image' qui contient le chemin relatif de l'icône
+        $imagePath = $drink->getIcon();
+
+        // Chemin absolu vers le fichier dans le dossier public
+        $publicDirectory = $this->getParameter('kernel.project_dir') . '/public/uploads/images/';
+        $filePath = $publicDirectory . $imagePath;
+
+        // Vérifier si le fichier existe
+        if (!file_exists($filePath)) {
+            return $this->json(['error' => 'Icon not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Renvoyer le fichier en réponse
+        try {
+            $file = new File($filePath);
+            return $this->file($file, null, ResponseHeaderBag::DISPOSITION_INLINE);
+        } catch (FileNotFoundException $e) {
+            return $this->json([
+                'error' => 'File not found'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
